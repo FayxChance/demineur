@@ -1,0 +1,31 @@
+@font-face {
+	font-family: 'ARCADECLASSIC';
+	src: url('ARCADECLASSIC.TTF') format('truetype');
+	
+}
+
+
+
+body, html {
+  cursor: url(images/cursor/cursorShiro.png), pointer;
+  height: 100%;
+}
+
+a:visited {
+	color: #3F0;
+    background-color: transparent;
+    text-decoration: none;
+	
+}
+a:hover {
+	color: #F00;
+    background-color: transparent;
+    text-decoration: none;
+	
+}
+a:active {
+	color: #F00;
+    background-color: transparent;
+    text-decoration: none;
+	
+}

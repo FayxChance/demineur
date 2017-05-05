@@ -1,0 +1,135 @@
+@font-face {
+    font-family: 'silkscreen_expandedbold';
+    src: url('fonts/silkscreenexpanded_bold_macroman/slkscreb-webfont.eot');
+    src: url('fonts/silkscreenexpanded_bold_macroman/slkscreb-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/silkscreenexpanded_bold_macroman/slkscreb-webfont.woff') format('woff'),
+         url('fonts/silkscreenexpanded_bold_macroman/slkscreb-webfont.ttf') format('truetype'),
+         url('fonts/silkscreenexpanded_bold_macroman/slkscreb-webfont.svg#silkscreen_expandedbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body
+{
+	background-color: #3A3A3A;
+	font-family: 'silkscreen_expandedbold';
+}
+
+#canvasId
+{
+	display: block;
+	margin: auto;
+	border: 5px solid black;
+	border-radius: 5px;
+}
+
+#s1
+{
+	position: absolute;
+	background-color: red;
+	border: 3px solid black;
+	border-radius: 5px;
+	top: 50px;
+	left: 50px;
+	padding: 20px;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+#s2
+{
+	position: absolute;
+	background-color: red;
+	border: 3px solid black;
+	border-radius: 5px;
+	top: 50px;
+	right: 50px;
+	padding: 20px;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+#rs1
+{
+	position: absolute;
+	background-color: red;
+	border: 3px solid black;
+	border-radius: 5px;
+	top: 20px;
+	left: 25%;
+	padding: 20px;
+	text-align: center;
+}
+
+#rs2
+{
+	position: absolute;
+	background-color: red;
+	border: 3px solid black;
+	border-radius: 5px;
+	top: 20px;
+	right: 25%;
+	padding: 20px;
+	text-align: center;
+}
+
+#monForm
+{
+	display: block;
+	margin: auto;
+	border: 3px solid black;
+	border-radius: 5px;
+	width: 150px;
+	text-align: center;
+	padding: 10px;
+	background-color: white;
+}
+
+#monForm input
+{
+	margin: 5px;
+	border: none;
+	background-color: white;
+}
+
+#monForm input:hover
+{
+	background-color: #6a6a6a;
+}
+
+#fh
+{
+	background-image: url("ressources/images/fleche_haut.png");
+	width: 23px;
+	height: 30px;
+}
+
+#fg
+{
+	background-image: url("ressources/images/fleche_gauche.png");
+	width: 30px;
+	height: 23px;
+}
+
+#fd
+{
+	background-image: url("ressources/images/fleche_droite.png");
+	width: 30px;
+	height: 23px;
+}
+
+#fh
+{
+	background-image: url("ressources/images/fleche_haut.png");
+	width: 23px;
+	height: 30px;
+}
+
+#fc
+{
+	background-image: url("ressources/images/sword.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 31px;
+	height: 30px;
+}

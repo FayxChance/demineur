@@ -1,0 +1,23 @@
+@font-face {
+	font-family: 'ARCADECLASSIC';
+	src: url('ARCADECLASSIC.TTF') format('truetype');
+}
+
+.canvas {
+	border: thick double #FF0;	
+	position:absolute;
+	left:35%;
+}
+
+.info {
+	position:absolute;
+	left:40%;
+	top:530;
+	font-family:ARCADECLASSIC;
+	color:#FF0
+}
+
+.co{width:40px; position:absolute; height:20; text-align:center; font-family:ARCADECLASSIC; background-color:#000000; color:#FF0; border:hidden; font-size:24px; left:250px;}
+.li{width:40px; position:absolute; height:20; text-align:center; font-family:ARCADECLASSIC; background-color:#000000; color:#FF0; border:hidden; font-size:24px; left:250px;}
+.sc{width:40px; position:absolute; height:20; text-align:center; font-family:ARCADECLASSIC; background-color:#000000; color:#FF0; border:hidden; font-size:24px; left:250px;}
+.or{width:40px; position:absolute; height:20; text-align:center; font-family:ARCADECLASSIC; background-color:#000000; color:#FF0; border:hidden; font-size:24px; left:250px;}

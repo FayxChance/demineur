@@ -1,0 +1,401 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+	  
+	  <script language="Javascript">    
+<!--    
+//******************************* classe Shadok***********************************
+	//function constructeur d'objet shadok
+	function ClasseShadok(xx,yy,coul){
+		// création des variables
+		this.x = xx;
+		this.y =yy
+		this.couleur = coul;
+		this.ouverture = 0;
+		this.sens= 1;
+		this.mouvement =1;
+		this.min = 0;
+		this.max = 8;
+		this.interval= 25;
+		this.compteur = 0;
+		this.dilueur = 0;
+		this.vx = 0;
+		this.vy = 0;
+		this.ay = -2;
+		this.ax = 1;
+		this.i_y = yy;
+		this.xdeb = xx;
+		this.ydeb = yy;
+		this.xfin = xx;
+		this.yfin = yy;
+		this.dx = 0;
+		this.dy = 0;
+		this.orientation = 1;
+	    // déclaration de la fonction dessiner 
+		this.dessiner = function(context){			
+			// on dessine le shadok
+			if (this.vx > 0)
+			{
+				this.orientation = 1;
+				var img = document.getElementById("sprite");
+	  			context.drawImage(img,this.compteur*40,0,40,40,this.x - 20,this.i_y - 40,40,40);
+  			}
+  			if (this.vx < 0)
+  			{
+  				this.orientation = 0;
+  				var img = document.getElementById("sprite_reverse");
+  				context.drawImage(img,this.compteur*40,0,40,40,this.x - 20,this.i_y - 40,40,40);
+  			}
+  			if (this.vx == 0)
+			{
+				if (this.orientation == 1)
+				{
+					var img = document.getElementById("sprites_static");
+		  			context.drawImage(img,this.x - 20,this.i_y - 40,40,40);
+	  			}
+	  			else
+	  			{
+	  				var img = document.getElementById("sprites_static_reverse");
+	  				context.drawImage(img,this.x - 20,this.i_y - 40,40,40);
+	  			}
+  			}
+			}
+			//
+		this.claquerDesDents = function(){
+			this.ouverture=this.ouverture +(this.mouvement * this.sens);
+			if( this.ouverture>=this.max)
+			{
+				this.ouverture=this.max;
+				this.sens =-1;
+			}
+			if( this.ouverture<=this.min)
+			{
+				this.ouverture=this.min;
+				this.sens =1;
+			}
+		}
+		this.claquerDesDents = function(){
+			this.ouverture=this.ouverture +(this.mouvement * this.sens);
+			if( this.ouverture>=this.max)
+			{
+				this.ouverture=this.max;
+				this.sens =-1;
+			}
+			if( this.ouverture<=this.min)
+			{
+				this.ouverture=this.min;
+				this.sens =1;
+			}
+		}
+		
+		
+	}// ---------------------- fin classe Shadok
+
+//*********************************** classe simulateur **************************
+	// function constructeur d'objet simulateur
+	function ClasseSimulateur(){
+		// intanciation des 2 shadoks (shad1 et shad2)
+		this.shad1 = new ClasseShadok(50,60,"#0000ff");		
+		this.shad2 = new ClasseShadok(100,80,"#ff0000");
+		this.univ = new ClasseUnivers();
+		
+		this.dessiner = function(context){
+			// on régénère l'arière plan			
+			context.rect(0,0,1000,600);
+			context.fillStyle = "#ffff00"; 
+			context.fill();
+			//on appelle la methode dessiner de l'objet shad (de type shadok)
+			this.shad1.dessiner(context);
+			this.shad2.dessiner(context);
+		}
+			
+	}
+//------------------------------fin de la classe simulateur --------------------------------
+
+//*****************************classeUnivers***************************************
+	// function constructeur d'objet Univers
+	function ClasseUnivers(){
+		// création des variables
+		this.largeur = document.getElementById("canvasId").width;
+		this.hauteur = document.getElementById("canvasId").height;
+		document.getElementById
+		this.x = new Array();
+		this.y = new Array();
+		this.nbPoints = 2;
+		this.x[1]=0;
+		this.y[1]=50;
+		this.x[2]=1000;
+		this.y[2]=50;
+		/*this.x[3]=120;
+		this.y[3]=20;
+		this.x[4]=160;
+		this.y[4]=20;
+		this.x[5]=200;
+		this.y[5]=0;
+		this.x[6]=240;
+		this.y[6]=0;
+		this.x[7]=260;
+		this.y[7]=40;
+		this.x[8]=300;
+		this.y[8]=40;
+		this.x[9]=320;
+		this.y[9]=0;
+		this.x[10]=400;
+		this.y[10]=200;
+		this.x[11]=600;
+		this.y[11]=120;
+		this.x[12]=720;
+		this.y[12]=40;*/
+		
+		
+		this.dessiner = function(context){
+			var i = 0;
+			context.beginPath();
+			context.strokeStyle='#000000';
+			context.moveTo(0,0);
+			while (i <= this.nbPoints)
+			{
+				context.lineTo(this.x[i],this.hauteur - this.y[i]);  
+				i = i+1;
+			}
+			context.stroke();
+			context.closePath();
+			//on colorie
+			context.beginPath();
+			context.strokeStyle='#ff0000';
+			context.moveTo(0,0);
+			var j=this.x[1];
+			var k=1; //Numéro variables de 1 à nbPoints
+			var y=600;
+			while (j <= this.x[this.nbPoints]) //Tant que j est inférieur à abscisse dernier point
+			{
+				if (j >= this.x[k+1])
+				{
+					k = k+1;
+				}
+				y =this.hauteur - (((this.y[k+1]-this.y[k])/(this.x[k+1]-this.x[k]))*j + (this.y[k]-((this.y[k+1]-this.y[k])/(this.x[k+1]-this.x[k]))*this.x[k])); //ax + b 
+				context.moveTo(j,this.hauteur);
+				context.lineTo(j,y);
+				j = j+1;
+			}
+			context.stroke();
+			context.closePath();
+			
+		}
+		
+		
+		
+	}
+
+
+
+window.onload = function()
+{   
+	//*************************** zoe de définition des fonctions **************
+	
+
+	
+	function arreter(){
+	    sim.shad1.mouvement=0;		
+	}	
+	function relancer(){
+		sim.shad1.mouvement=1;
+	}	
+	function allerDroite(){
+		sim.shad1.vx = sim.shad1.vx + 5;
+	}
+	function allerGauche(){
+		sim.shad1.vx = sim.shad1.vx - 5;
+	}
+	function sauter(){
+		sim.shad1.vy = sim.shad1.vy + 10;
+	}
+	function allerDroite2(){
+		sim.shad2.vx = sim.shad2.vx + 5;
+	}
+	function allerGauche2(){
+		sim.shad2.vx = sim.shad2.vx - 5;
+	}
+	function sauter2(){
+		sim.shad2.vy = sim.shad.vy + 10;
+	}
+  // la fonction évoluer n'est pas appelé immédiatement lors du chargement mais seulement par le timer	
+  
+  function evoluer()
+    {    
+        // la fonction evoluer demande aux 2 shados de claquer des dents
+        sim.shad1.claquerDesDents();
+        sim.shad2.claquerDesDents();
+        // puis demande au simulateur de se dessiner
+        sim.dessiner(context);
+		//puis a l'univers
+		sim.univ.dessiner(context);
+        // puis affiche le sens de deplacement du shad1
+		document.monForm.ouverture.value =sim.shad1.x;
+		var x_pur = sim.shad1.x;
+		while (x_pur >= 220)
+		{
+			x_pur = x_pur - 220;
+		}
+		sim.shad1.compteur = Math.round(x_pur*8/220);
+		/*sim.shad1.dilueur = sim.shad1.dilueur + 1;
+		if (sim.shad1.dilueur == 2)
+		{
+			sim.shad1.compteur = sim.shad1.compteur + 1;
+			sim.shad1.dilueur = 0;
+			if (sim.shad1.compteur == 9)
+			{
+				sim.shad1.compteur = 0;
+			}
+		}*/
+		//on calcule la vitesse des shadoks
+		sim.shad1.vy = sim.shad1.vy + sim.shad1.ay;
+		sim.shad2.vy = sim.shad2.vy + sim.shad2.ay;
+		if (sim.shad1.vx != 0)
+		{
+			if (sim.shad1.vx < 0)
+			{
+				sim.shad1.vx = sim.shad1.vx +1;
+			}
+			else{
+				sim.shad1.vx = sim.shad1.vx -1;
+			}
+		}
+		if (sim.shad2.vx != 0)
+		{
+			if (sim.shad2.vx < 0)
+			{
+				sim.shad2.vx = sim.shad2.vx +1;
+			}
+			else{
+				sim.shad2.vx = sim.shad2.vx -1;
+			}
+		}
+		//on affecte les deplacements des shadocks
+		sim.shad1.xdeb = sim.shad1.x;
+		sim.shad1.ydeb = sim.shad1.y;
+		sim.shad1.x = sim.shad1.x + sim.shad1.vx;
+		sim.shad1.y = sim.shad1.y + sim.shad1.vy;
+		sim.shad2.x = sim.shad2.x + sim.shad2.vx;
+		sim.shad2.y = sim.shad2.y + sim.shad2.vy;
+		//on tient compte de la map
+		var n= 100;
+		var i = 1;
+		var j = 0;
+		var k = 1;
+		var y = 0;
+		sim.shad1.xfin = sim.shad1.xdeb;
+		sim.shad1.yfin = sim.shad1.ydeb;
+		sim.shad1.dx = (sim.shad1.x - sim.shad1.xdeb)/n;
+		sim.shad1.dy = (sim.shad1.y - sim.shad1.ydeb)/n;
+		while (i <= n)
+		{
+			while (sim.univ.x[k+1] < sim.shad1.xdeb + i*sim.shad1.dx) //Tant que j est inférieur à abscisse k
+				{
+					k = k + 1;
+				}
+			y =((sim.univ.y[k+1]-sim.univ.y[k])/(sim.univ.x[k+1]-sim.univ.x[k]))*(sim.shad1.xdeb + i*sim.shad1.dx) + (sim.univ.y[k]-((sim.univ.y[k+1]-sim.univ.y[k])/(sim.univ.x[k+1]-sim.univ.x[k]))*sim.univ.x[k]); //ax + b 
+			if (sim.shad1.ydeb + i*sim.shad1.dy > y)
+			{
+				sim.shad1.xfin = sim.shad1.xdeb + i*sim.shad1.dx;
+				sim.shad1.yfin = sim.shad1.ydeb + i*sim.shad1.dy + 1;
+				i = i +1;
+			}
+			else{
+				sim.shad1.vy = 0;
+				i = n + 1;
+			}
+			k=0;
+		}
+		sim.shad1.x = sim.shad1.xfin;
+		sim.shad1.y = sim.shad1.yfin;
+		//on impose une vitesse limite
+		if (sim.shad1.vx > 20)
+		{
+			sim.shad1.vx = 20;
+		}
+		if (sim.shad1.vx < -20)
+		{
+			sim.shad1.vx = -20;
+		}
+		
+		//on empeche les shadocks de sortir du monde
+		if (sim.shad1.y <= 0){
+			sim.shad1.y = 20;
+			sim.shad1.vy = 20;
+		}
+		if (sim.shad2.y <= 20){
+			sim.shad2.y = 20;
+			sim.shad2.vy = 0;
+		}
+		//on inverse le repère
+		sim.shad1.i_y = document.getElementById("canvasId").height - sim.shad1.y;
+		sim.shad2.i_y = document.getElementById("canvasId").height - sim.shad2.y;
+    }
+  //******************* fin definition des fonctions**************  
+  //************************************************************** 
+  //	debutdu code exécuté au chargement de la page
+  //**************************************************************
+  
+  var monCanevas = document.getElementById("canvasId");
+  // tout est mis dans un if getContext de monCanevas afin d'éviter les plantage si canvas n'est pas géré par le navigateur
+  if (monCanevas.getContext){
+
+    var context= monCanevas.getContext("2d"); 
+ 
+     
+    // instancie(construit) un jeu  nommé  j
+    var sim = new ClasseSimulateur();
+    
+    
+    // definition du timer en ms et de la fonction appellée par le timer
+    // ATTENTION : pas de parenthèses pour la fonction appelée
+    // le jeu est redessiné toutes les 30 ms
+    var myInterval = setInterval(evoluer, 50);
+    // gestionnaire d'événement
+    document.monForm.boutonStop.onclick=arreter;
+    document.monForm.boutonEncore.onclick=relancer;
+	document.monForm.boutonDroite.onclick=allerDroite2;
+	document.monForm.boutonGauche.onclick=allerGauche2;
+	document.monForm.boutonSauter.onclick=sauter2;
+	window.onkeydown = function(event) {
+	    switch (event.keyCode) {
+	        case 81: /* q */
+	        allerGauche();
+	        break;
+	        case 90: /* z */ 
+	        sauter();
+	        case 68: /* d */
+	        allerDroite();
+	        break;
+	    }
+  }     // fin de   if (monCanevas.getContext)
+   
+}    //   fin de window.onload = function()
+
+}
+
+-->    
+</script>
+</head>
+<body>
+  <p> le canvas : permet de visualiser shad1 et shad2,  nos  2 Shadoks en temps réel </p>
+  <canvas id="canvasId" width="1000" height="600" name="monCanevas">
+	  Texte si navigateur ne supporte pas la balise Canvas
+  </canvas>
+  <p>Ci-après Un formulaire pour réaliser un IHM simple</p>
+  <form name="monForm">	  
+      x: <input value="0" name="ouverture" id="ouverture" type="text"><br> 
+      <input value="Stop" name="boutonStop" type="button" >     
+      <input value="Encore" name="boutonEncore" type="button" > <br/>
+	  <input value="sauter" name="boutonSauter" type="button" >  <br/>
+	  <input value="gauche" name="boutonGauche" type="button" > 
+	  <input value="droite" name="boutonDroite" type="button" > 	  
+  </form>
+  <img id="sprite" width="220" height="277" src="sprites.png" alt="sprite" style="display: none;">
+  <img id="sprite_reverse" width="220" height="277" src="sprites_reverse.png" alt="sprite"  style="display: none;">
+  <img id="sprites_static" width="220" height="277" src="sprites_static.png" alt="sprite"  style="display: none;">
+  <img id="sprites_static_reverse" width="220" height="277" src="sprites_static_reverse.png" alt="sprite"  style="display: none;">
+</html>

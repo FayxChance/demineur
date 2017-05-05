@@ -1,0 +1,370 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+	  
+	  <script language="Javascript">    
+<!-- 
+var ratioDeTaille=0.75;   
+//******************************* classe Shadok***********************************
+	//function constructeur d'objet shadok
+	function ClasseShadok(xx,yy,coul){
+		// création des variables
+		this.x = xx;
+		this.y =yy
+		this.couleur = coul;
+		this.ouverture = 0;
+		this.sens= 1;
+		this.mouvement =1;
+		this.min = 0;
+		this.max = 8;
+	    // déclaration de la fonction dessiner 
+		this.dessiner = function(context){			
+			
+			// on dessine le shadok
+			context.fillStyle = this.couleur; 
+			context.beginPath();
+			context.arc(this.x, this.y, 20, Math.PI*0.45,  Math.PI*1.55);			
+			context.lineTo(this.x+30,this.y-this.ouverture*2);
+			context.lineTo(this.x,this.y);
+			context.lineTo(this.x+30,this.y+this.ouverture*2);
+			context.closePath();
+			context.fill();	 
+		}
+		this.claquerDesDents = function(){
+			this.ouverture=this.ouverture +(this.mouvement * this.sens);
+			if( this.ouverture>=this.max)
+			{
+				this.ouverture=this.max;
+				this.sens =-1;
+			}
+			if( this.ouverture<=this.min)
+			{
+				this.ouverture=this.min;
+				this.sens =1;
+			}
+		}
+		
+		
+	}// ---------------------- fin classe Shadok
+	
+	/******************************** Classe Cellule ******************************/
+	
+	function ClasseCellule(){
+		
+		this.bombe = 0;
+		this.cache = 1;
+		this.nombre = 0;
+		this.drapeau = 0;
+		
+		
+			
+	}
+		
+	
+	
+	
+	/******************************** Fin classe Cellule **************************/
+
+//*********************************** classe Univers **************************
+	// function constructeur d'objet Univers
+	function Univers(){
+		// intanciation des 2 shadoks (shad1 et shad2)
+		this.shad1 = new ClasseShadok(50,60,"#0000ff");		
+		this.shad2 = new ClasseShadok(100,80,"#ff0000");
+		
+		
+	
+		
+		
+		/*********************  Espace concernant le tableau des cellules   ********************************/
+		
+		//Propriétés concernant la map
+		this.largHaut= 45*ratioDeTaille ;             // largeur et hauteur d'une cellule * le ratio de taille
+		this.espaceCellule = 5;		                  //Espace entre les cellules lors du dessin
+		this.nbColonne = 9;							  //Nombre de colonne total (7 visibles et 2 non visibles)
+		this.nbLigne = 12;							  //Nombre de ligne total   (10 visibles et 2 non visibles)
+		this.coulFondCel = "rgb(0,255,0)";			  //Couleur de fond des cellules
+		this.coulCacheCel = "rgb(0,0,0)";			  //Couleur du cache des cellules
+		
+		
+		//construction du tableau des cellules du jeu
+		this.cel = new Array();						  //Creation du tableau pour les lignes
+		for(i=0;i<=this.nbLigne;i++){				  //Creation des lignes
+		  this.cel[i] = new Array();				  //Creation du tableau pour les colonnes
+		  for(j=0;j<=this.nbColonne;j++){			  //Creation des colonnes
+		    this.cel[i][j] = new ClasseCellule(); //Creation des objets cellules
+		  } //Fin for j
+		} //Fin for i
+	    //Fin creation tableau des cellules
+		
+		/********************* Fin espace concernant le tableau des cellules   ********************************/
+		
+		
+		
+		
+		
+
+		/********************* Espace concernant répartitions bombe aléatoire   ********************************/
+		
+		this.bombeAlea = function(nbBombe)
+		
+		{
+	      for(i=0; i<nbBombe; i++){												//Ajoute 10 bombes
+			  var xBombe = Math.floor(Math.random()*(this.nbLigne-2) + 1);
+			  var yBombe = Math.floor(Math.random()*(this.nbColonne-2) + 1);  	    //Emplacement x et y de la bombe redéfinis à chaque boucle
+			  if(this.cel[xBombe][yBombe].bombe==0){this.cel[xBombe][yBombe].bombe = 1;}          //Test si il n'y a pas de bombe placée à la cel[x][y], si test=true alors place une bombe
+			  else{i--;}  
+			                                                     //Si test=false alors decremente le compteur de bombe de 1 pour replacer la bombe 
+			  }//Fin du for i
+		}
+		
+		/********************* Fin espace concernant répartitions bombe aléatoire   ********************************/
+		
+		
+		
+		
+		
+		
+		
+		
+        this.dessiner = function(context){
+			
+			
+		    // on régénère l'arière plan			
+			context.rect(0,0,400,300);
+			context.fillStyle = "#ffff00"; 
+			context.fill();
+			//on appelle la methode dessiner de l'objet shad (de type shadok)
+			this.shad1.dessiner(context);
+			this.shad2.dessiner(context);
+			// dessin des cellules
+			
+			
+			/******************* Partie du dessin de la cellule *******************************/
+			
+			
+			
+			l = this.largHaut;  // variable locale pour simplifier l'ecriture
+			
+			/********************  Dessin du fond de la cellule *******************************/
+			
+			
+			for (i=1;i<=this.nbColonne-2 ;i++){ //Dessine les colonnes 
+			  for (j=1;j<=this.nbLigne-2;j++){	//Dessine les lignes
+	            context.beginPath();
+				context.fillStyle = "rgb(0,255,0)"; //Couleur du fond de la cellule
+                context.fillRect ((i-1)*l+this.espaceCellule*(i-1), (j-1)*l+this.espaceCellule*(j-1), l, l); // Dessin du rectangle de largeur l avec un espace entre les rectangles de espaceCellule 
+                context.fill();
+			  }// fin du for j
+			}	 // fin du for i
+			
+			/******************** Fin dessin du fond de la cellule *******************************/
+			
+			
+			
+			/******************** Dessin de la bombe *********************************************/
+			
+			
+			for (i=1;i<=this.nbColonne-2 ;i++){ //Dessine les colonnes 
+			  for (j=1;j<=this.nbLigne-2;j++){	//Dessine les lignes
+			  if(this.cel[j][i].bombe == 1){    //Vérifie si l'état de cache de cellule est == 1, si elle est cache, donc ==1, elle dessine un rectangle noir qui recouvre la cellule.
+	            context.beginPath();
+				context.fillStyle = "rgb(00,0,0)"; //Couleur du fond de la cellule
+                context.fillRect ((i-1)*l+this.espaceCellule*(i-1), (j-1)*l+this.espaceCellule*(j-1), l, l); // Dessin du rectangle de largeur l avec un espace entre les rectangles de espaceCellule 
+                context.fill();
+				}
+			  }// fin du for j
+			}	 // fin du for i
+			
+			
+			
+			/******************** Fin dessin de la bombe *********************************************/
+			
+			
+			
+			
+			
+			
+			/******************** Debut dessin des bombes *******************************/
+			
+			
+				var x = 	300; //abcsisse du centre
+				var y =     275; // ordonnÃ©e du centre
+		   
+				context.fillStyle = "#ff0000"; 
+			
+				context.beginPath(); // debut du chemin 
+				context.arc(x, y, 13,0,Math.PI/3); // dessin du premier arc de cercle qui va de 0 a PI/3
+				context.moveTo(x,y); 
+				context.lineTo(x+13*Math.cos(0),y+13*Math.sin(0)); 
+				context.lineTo(x+13*Math.cos(Math.PI/3),y+13*Math.sin(Math.PI/3));
+				context.lineTo(x,y);
+				context.arc(x, y, 13,2*Math.PI/3,Math.PI); // dessin du deuxieme arc de cercle qui va de 2*PI/3 a PI
+				context.moveTo(x,y);
+				context.lineTo(x+13*Math.cos(2*Math.PI/3),y+13*Math.sin(2*Math.PI/3));
+				context.lineTo(x+13*Math.cos(Math.PI),y+13*Math.sin(Math.PI));
+				context.lineTo(x,y);
+				context.arc(x, y, 13,4*Math.PI/3,5*Math.PI/3); // dessin du troisieme arc de cercle qui va de 4*PI/3 a 5*PI/3
+				context.moveTo(x,y);
+				context.lineTo(x+13*Math.cos(4*Math.PI/3),y+13*Math.sin(4*Math.PI/3));
+				context.lineTo(x+13*Math.cos(5*Math.PI/3),y+13*Math.sin(5*Math.PI/3));
+				context.lineTo(x,y);
+				context.closePath(); // fin du chemin 
+				context.fill();	// remplissage des arc de cercles 
+			  
+		        // Les angles vont a l inverse du sens trigo (sens horraire)
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/******************** Fin dessin des bombes ********************************/
+			
+			
+			
+			
+
+			
+			
+			
+			
+			
+			
+			/********************  Dessin du cache de la cellule *******************************/
+			
+			
+			/*for (i=1;i<=this.nbColonne-2 ;i++){ //Dessine les colonnes 
+			  for (j=1;j<=this.nbLigne-2;j++){	//Dessine les lignes
+			  if(this.cel[j][i].cache == 1){    //Vérifie si l'état de cache de cellule est == 1, si elle est cache, donc ==1, elle dessine un rectangle noir qui recouvre la cellule.
+	            context.beginPath();
+				context.fillStyle = "rgb(00,0,0)"; //Couleur du cache de la cellule
+                context.fillRect ((i-1)*l+this.espaceCellule*(i-1), (j-1)*l+this.espaceCellule*(j-1), l, l); // Dessin du rectangle de largeur l avec un espace entre les rectangles de espaceCellule 
+                context.fill();
+				}
+			  }// fin du for j
+			}	 // fin du for i*/
+			
+			/******************** Fin dessin du cache de la cellule *******************************/
+			
+			
+			
+		/******************** Fin partie du dessin de la cellule  *******************************/
+      
+	  
+	    }//Fin de la fonction dessin
+
+
+		/**********************************Partie test *********************************************/
+		//Test du cache
+	  this.cel[7][2].cache=0;
+	  this.cel[2][5].cache=0;
+	  console.log(this.cel[2][1]);
+	  console.log(this.cel[4][7]);
+			
+			
+			
+			
+			
+			
+			
+			/********************************** Fin Partie test *********************************************/	
+	
+			
+			
+			
+    }//Fin du constructeur Univers
+//------------------------------fin de la classe Univers --------------------------------
+
+
+window.onload = function()
+{   
+	//*************************** zoe de définition des fonctions **************
+	
+
+
+	
+	function arreter(){
+	    univ.shad1.mouvement=0;		
+	}	
+	function relancer(){
+		univ.shad1.mouvement=1;
+	}	
+	
+  // la fonction évoluer n'est pas appelé immédiatement lors du chargement mais seulement par le timer	
+  
+  function evoluer()
+    {    
+        // la fonction evoluer demande aux 2 shados de claquer des dents
+        univ.shad1.claquerDesDents();
+        univ.shad2.claquerDesDents();
+
+        // puis demande au simulateur de se dessiner
+        univ.dessiner(context);
+	
+
+		
+		
+        // puis affiche le sens de deplacement du shad1
+		document.monForm.ouverture.value =univ.shad1.sens;
+    }
+  //******************* fin definition des fonctions**************  
+  //************************************************************** 
+  //	debutdu code exécuté au chargement de la page
+  //**************************************************************
+  
+  var monCanevas = document.getElementById("canvasId");
+  // tout est mis dans un if getContext de monCanevas afin d'éviter les plantage si canvas n'est pas géré par le navigateur
+  if (monCanevas.getContext){
+
+    var context= monCanevas.getContext("2d"); 
+ 
+     
+    // instancie(construit) un jeu  nommé  j
+    var univ = new Univers();
+    
+	
+    
+    // definition du timer en ms et de la fonction appellée par le timer
+    // ATTENTION : pas de parenthèses pour la fonction appelée
+    // le jeu est redessiné toutes les 30 ms
+    var myInterval = setInterval(evoluer, 50);
+    // gestionnaire d'événement
+    document.monForm.boutonStop.onclick=arreter;
+    document.monForm.boutonEncore.onclick=relancer;
+  }     // fin de   if (monCanevas.getContext)
+  
+  
+  
+  
+  
+  univ.bombeAlea(10);  // Lancement de la génération aléatoire de (n) bombes lors du chargement de la page 
+  
+  
+  
+  
+  
+}    //   fin de window.onload = function()
+
+
+
+-->    
+</script>
+</head>
+<body>
+  <p> le canvas : permet de visualiser shad1 et shad2,  nos  2 Shadoks en temps réel </p>
+  <canvas id="canvasId" width="800" height="800" name="monCanevas">
+	  Texte si navigateur ne supporte pas la balise Canvas
+  </canvas>
+  <p>Ci-après Un formulaire pour réaliser un IHM simple</p>
+  <form name="monForm">	  
+      sens: <input value="0" name="ouverture" id="ouverture" type="text"><br> 
+      <input value="Stop" name="boutonStop" type="button" >     
+      <input value="Encore" name="boutonEncore" type="button" >  
+  </form>
+
+</html>
